@@ -1,0 +1,44 @@
+body {
+    color: #444
+    }
+
+strong {
+    color: #222
+    }
+
+.container {
+    position: relative;
+    width: 960px;
+    clear: both;
+    }
+
+.center {
+    position: relative;
+    width: 960px;
+    height: 310px;
+    }
+
+.center img {
+    position: absolute;
+    left: 0;
+    height: 260px;
+    width: 180px;
+    }
+
+.pull_left {
+    position: relative;
+    float: left;
+    margin-top: 41px;
+    left: 185px;
+    width: 280px;
+    }
+
+.pull_right {
+    position: relative;
+    float: right;
+    width: 470px;
+    }
+
+.bio {
+    position: relative;
+    }

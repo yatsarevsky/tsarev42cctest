@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% load url from future %}
+
+{% block content %}
+<h1>42 Coffee Cups Test Assignment</h1>
+<div class="container">
+    <div class="center">
+        <div class="pull_left">
+            <strong>Name:</strong> {{ contacts.name }}<br />
+            <strong>Surname:</strong> {{ contacts.surname }}<br />
+            <strong>Birth Date:</strong> {{ contacts.birth_date }}<br />
+        </div>
+        <div class="pull_right">
+            <h3 style="margin-top: 0px;">Contacts:</h3>
+            <strong>E-mail:</strong> {{ contacts.e_mail }}<br />
+            {%if contacts.skype or contacts.mob or contacts.jid%}
+            <h3><strong>Other contacts:</strong></h3>
+            {%endif%}
+            {%if contacts.skype%}
+            <strong>Skype:</strong> {{ contacts.skype }}<br />
+            {%endif%}
+            {%if contacts.mob%}
+            <strong>Mob:</strong> {{ contacts.mob }}<br />
+            {%endif%}
+            {%if contacts.jid%}
+            <strong>JID:</strong> {{ contacts.jid }}<br />
+            {%endif%}
+        </div>
+    </div>
+    <span class="bio"><strong>BIO:</strong> {{ contacts.bio }} </span>
+</div>
+{% endblock %}
