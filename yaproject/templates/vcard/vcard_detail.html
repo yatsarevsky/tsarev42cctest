@@ -27,6 +27,7 @@
             {%endif%}
         </div>
     </div>
-    <span class="bio"><strong>BIO:</strong> {{ contacts.bio }} </span>
+    <span class="bio"><strong>BIO:</strong> {{ contacts.bio }} </span><br />
+    <a href="{% url 'requests' %}" class="base"> Requests </a>
 </div>
 {% endblock %}

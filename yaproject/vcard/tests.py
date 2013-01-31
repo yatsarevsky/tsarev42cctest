@@ -1,7 +1,7 @@
 from django.utils import unittest
 from django.test import Client
 
-from yaproject.vcard.models import VCard
+from yaproject.vcard.models import VCard, RequestStore
 
 
 class VcardModelsTest(unittest.TestCase):
@@ -38,3 +38,12 @@ class VcardViewsTest(unittest.TestCase):
         self.resp = client.get('/')
         self.assertEqual(self.resp.status_code, 200)
         self.assertTrue(self.resp.context['contacts'])
+
+
+class RequestStoreTest(unittest.TestCase):
+    def testMiddleware(self):
+        client = Client()
+        self.resp = client.get('/request_store/')
+        self.assertEqual(self.resp.status_code, 200)
+        self.req_store = RequestStore.objects.latest('date')
+        self.assertTrue(self.req_store)

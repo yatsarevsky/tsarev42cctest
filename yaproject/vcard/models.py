@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 from datetime import datetime
 
 
-__all__ = ['VCard']
+__all__ = ['VCard', 'RequestStore']
 
 
 class VCard(models.Model):
@@ -21,3 +21,12 @@ class VCard(models.Model):
     def __unicode__(self):
         return '{0} {1}'.format(self.name, self.surname)
 
+
+class RequestStore(models.Model):
+    user = models.ForeignKey(User, blank=True, null=True)
+    host = models.CharField(max_length=255)
+    path = models.CharField(max_length=255)
+    date = models.DateTimeField(default=datetime.now())
+
+    def __unicode__(self):
+        return '{0} {1}'.format(self.host, self.date)
