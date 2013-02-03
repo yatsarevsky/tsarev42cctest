@@ -5,7 +5,7 @@ from yaproject.vcard.models import VCard, RequestStore
 
 
 def contacts(request):
-    contacts = VCard.objects.get(pk=1)
+    contacts = VCard.objects.all()
 
     return render_to_response('vcard/vcard_detail.html',
                               {'contacts': contacts},
