@@ -6,7 +6,7 @@ from yaproject.vcard.models import VCard, RequestStore
 
 class VcardModelsTest(unittest.TestCase):
     def testDataInfo(self):
-        self.vcard = VCard.objects.get(pk=1)
+        self.vcard = VCard.objects.get(pk=10)
         self.assertTrue(self.vcard.name)
         self.assertTrue(self.vcard.surname)
         self.assertTrue(self.vcard.birth_date)
