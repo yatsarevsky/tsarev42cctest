@@ -1,5 +1,9 @@
 from django.utils import unittest
 from django.test import Client
+from django.template import RequestContext
+from django.test.client import RequestFactory
+from django.conf import settings as django_settings
+from yaproject.vcard.context_processor import add_settings
 
 from yaproject.vcard.models import VCard, RequestStore
 
@@ -47,3 +51,12 @@ class RequestStoreTest(unittest.TestCase):
         self.assertEqual(self.resp.status_code, 200)
         self.req_store = RequestStore.objects.latest('date')
         self.assertTrue(self.req_store)
+
+
+class ContextProcessorTest(unittest.TestCase):
+    def test_settings(self):
+        factory = RequestFactory()
+        request = factory.get('/')
+        c = RequestContext(request, {'foo': 'bar'}, [add_settings])
+        self.assertTrue('settings' in c)
+        self.assertEquals(c['settings'], django_settings)
