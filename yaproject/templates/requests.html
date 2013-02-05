@@ -1,14 +1,12 @@
 {%extends "base.html" %}
 
 {% block content %}
-
 <h1>Stored requests</h1>
     <table>
     <thead>
         <tr>
             <td>host</td>
             <td>path</td>
-            <td>user</td>
             <td>date</td>
         </tr>
     </thead>
@@ -17,13 +15,10 @@
         <tr>
             <td>{{el.host}}</td>
             <td>{{el.path}}</td>
-            <td>{{el.user}}</td>
             <td>{{el.date}}</td>
         </tr>
     </tbody>
     {% endfor %}
 </table>
-
 </div>
-
 {% endblock %}
