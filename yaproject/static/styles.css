@@ -9,36 +9,27 @@ strong {
 .container {
     position: relative;
     width: 960px;
+    height: 500px;
     clear: both;
     }
 
 .center {
     position: relative;
     width: 960px;
-    height: 310px;
-    }
-
-.center img {
-    position: absolute;
-    left: 0;
-    height: 260px;
-    width: 180px;
+    height: 400px;
+    border: 1px solid rgb(100, 100, 100);
+    border-width: 0px 0px 2px;
     }
 
 .pull_left {
     position: relative;
     float: left;
     margin-top: 41px;
-    left: 185px;
-    width: 280px;
+    width: 470px;
     }
 
 .pull_right {
     position: relative;
     float: right;
     width: 470px;
-    }
-
-.bio {
-    position: relative;
     }
