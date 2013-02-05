@@ -7,26 +7,20 @@
     <div class="center">
         <div class="pull_left">
             <strong>Name:</strong> {{ contacts.name }}<br />
-            <strong>Surname:</strong> {{ contacts.surname }}<br />
-            <strong>Birth Date:</strong> {{ contacts.birth_date }}<br />
+            <strong>Last name:</strong> {{ contacts.surname }}<br />
+            <strong>Date of birth:</strong> {{ contacts.birth_date }}<br />
+            <h3><strong>BIO:</strong></h3> {{ contacts.bio }}<br />
         </div>
         <div class="pull_right">
             <h3 style="margin-top: 0px;">Contacts:</h3>
             <strong>E-mail:</strong> {{ contacts.e_mail }}<br />
-            {%if contacts.skype or contacts.mob or contacts.jid%}
-            <h3><strong>Other contacts:</strong></h3>
-            {%endif%}
-            {%if contacts.skype%}
+            <strong>Jabber:</strong> {{ contacts.jid }}<br />
             <strong>Skype:</strong> {{ contacts.skype }}<br />
-            {%endif%}
-            {%if contacts.mob%}
+            {%if contacts.mob %}
+            <h3><strong>Other contacts:</strong></h3>
             <strong>Mob:</strong> {{ contacts.mob }}<br />
-            {%endif%}
-            {%if contacts.jid%}
-            <strong>JID:</strong> {{ contacts.jid }}<br />
             {%endif%}
         </div>
     </div>
-    <span class="bio"><strong>BIO:</strong> {{ contacts.bio }} </span>
 </div>
 {% endblock %}
