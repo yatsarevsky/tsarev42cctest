@@ -1,7 +1,4 @@
 from django.db import models
-from django.contrib.auth.models import User
-
-from datetime import datetime
 
 
 __all__ = ['VCard']
@@ -20,4 +17,3 @@ class VCard(models.Model):
 
     def __unicode__(self):
         return '{0} {1}'.format(self.name, self.surname)
-
