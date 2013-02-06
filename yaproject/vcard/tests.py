@@ -42,6 +42,18 @@ class VcardViewsTest(unittest.TestCase):
         self.assertTrue(self.vcard.bio)
         self.assertTrue(self.vcard.e_mail)
 
+    def test_views_with_edit_page(self):
+        pass
+
+    def test_views_with_registration(self):
+        pass
+
+    def test_views_with_login(self):
+        pass
+
+    def test_views_with_logout(self):
+        pass
+
 
 class RequestStoreTest(unittest.TestCase):
     def test_middleware_with_store(self):
@@ -61,3 +73,11 @@ class ContextProcessorTest(unittest.TestCase):
         c = RequestContext(request, {'foo': 'bar'}, [add_settings])
         self.assertTrue('settings' in c)
         self.assertEquals(c['settings'], django_settings)
+
+
+class FormTest(unittest.TestCase):
+    def test_form_with_member_account(self):
+        pass
+
+    def test_form_with_vcard(self):
+        pass

@@ -14,33 +14,32 @@
     {% endif %}
 </div>
 <div class="container">
+<form action="./" method="post" enctype="multipart/form-data">
+    {% csrf_token %}
     <div class="center">
         <div class="pull_left" style="margin-top: 41px;">
-            <strong>Name:</strong> {{ contacts.name }}<br />
-            <strong>Last name:</strong> {{ contacts.surname }}<br />
-            <strong>Date of birth:</strong> {{ contacts.birth_date }}<br />
-            {% if contacts.photo %}
-            <h3><strong>Photo:</strong><br />
-            <img style="width: 220px; height: 310px;" src="{{ contacts.photo.url }}" alt="">
-            {% endif %}
+            <strong>&#160 &#160 &#160 &#160 &#160 Name :</strong> {{ form.name }}<br />
+            <strong>&#160 &#160 Last name:</strong> {{ form.surname }}<br />
+            <strong>Date of birth:</strong> {{ form.birth_date }}<br />
+            <h3><strong>Photo:</strong> {{ form.photo }}<br />
         </div>
         <div class="pull_right">
             <h3 style="margin-top: 0px;">Contacts:</h3>
-            <strong>E-mail:</strong> {{ contacts.e_mail }}<br />
-            <strong>Jabber:</strong> {{ contacts.jid }}<br />
-            <strong>Skype:</strong> {{ contacts.skype }}<br />
-            {%if contacts.mob %}
+            <strong>E-mail:</strong> {{ form.e_mail }}<br />
+            <strong>Jabber:</strong> {{ form.jid }}<br />
+            <strong> Skype :</strong> {{ form.skype }}<br />
             <h3><strong>Other contacts:</strong></h3>
-            <strong>Mob:</strong> {{ contacts.mob }}<br />
-            {%endif%}
-            <h3><strong>BIO:</strong></h3> {{ contacts.bio }}<br />
+            <strong>Mob:</strong> {{ form.mob }}<br />
+            <h3><strong>BIO:</strong></h3> {{ form.bio }}<br />
+        </div>
+        <div class="pull_left" style="margin-top: 30px; width: 600px;">
+            <input type="submit" value="Save" />
+            <a href="{% url 'home' %}" class="base"> Cancel </a>
         </div>
     </div>
+</form>
     <div class="pull_left">
     <a href="{% url 'requests' %}" class="base"> Requests </a>
-    </div>
-    <div class="pull_right" style="text-align: right;">
-    <a href="{% url 'edit_page' %}">Edit</a>
     </div>
 </div>
 {% endblock %}
