@@ -1,5 +1,4 @@
 from django.db import models
-from django.contrib.auth.models import User
 
 from datetime import datetime
 
@@ -23,7 +22,6 @@ class VCard(models.Model):
 
 
 class RequestStore(models.Model):
-    user = models.ForeignKey(User, blank=True, null=True)
     host = models.CharField(max_length=255)
     path = models.CharField(max_length=255)
     date = models.DateTimeField(default=datetime.now())

@@ -31,6 +31,12 @@ class VcardViewsTest(unittest.TestCase):
         self.resp = client.get('/')
         self.assertEqual(self.resp.status_code, 200)
         self.assertTrue(self.resp.context['contacts'])
+        self.vcard = self.resp.context['contacts']
+        self.assertTrue(self.vcard.name)
+        self.assertTrue(self.vcard.surname)
+        self.assertTrue(self.vcard.birth_date)
+        self.assertTrue(self.vcard.bio)
+        self.assertTrue(self.vcard.e_mail)
 
 
 class RequestStoreTest(unittest.TestCase):
