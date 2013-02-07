@@ -28,8 +28,10 @@ def edit_page(request):
 
     if request.POST:
         form = VCardForm(request.POST, request.FILES, instance=instance)
-        form.save()
-        return redirect('home')
+
+        if form.is_valid():
+            form.save()
+            return redirect('home')
 
     return render_to_response('vcard/edit_vcard.html',
         {'form': form}, RequestContext(request))
