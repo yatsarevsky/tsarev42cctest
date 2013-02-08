@@ -2,7 +2,7 @@
 {% load url from future %}
 
 {% block content %}
-<div class="pull_left" style="width: 600px;">
+<div class="up" >
     <h1>42 Coffee Cups Test Assignment</h1>
 </div>
 <div class="authenticate">
@@ -17,14 +17,14 @@
 <form action="./" method="post" enctype="multipart/form-data">
     {% csrf_token %}
     <div class="center">
-        <div class="pull_left" style="margin-top: 41px;">
-            <strong>&#160 &#160 &#160 &#160 &#160 Name :</strong> {{ form.name }}<br />
-            <strong>&#160 &#160 Last name:</strong> {{ form.surname }}<br />
+        <div class="pull_left">
+            <strong id="name"> Name :</strong> {{ form.name }}<br />
+            <strong id="surname"> Last name:</strong> {{ form.surname }}<br />
             <strong>Date of birth:</strong> {{ form.birth_date }}<br />
             <h3><strong>Photo:</strong> {{ form.photo }}<br />
         </div>
         <div class="pull_right">
-            <h3 style="margin-top: 0px;">Contacts:</h3>
+            <h3>Contacts:</h3>
             <strong>E-mail:</strong> {{ form.e_mail }}<br />
             <strong>Jabber:</strong> {{ form.jid }}<br />
             <strong> Skype :</strong> {{ form.skype }}<br />
@@ -32,7 +32,7 @@
             <strong>Mob:</strong> {{ form.mob }}<br />
             <h3><strong>BIO:</strong></h3> {{ form.bio }}<br />
         </div>
-        <div class="pull_left" style="margin-top: 30px; width: 600px;">
+        <div class="c_down">
             <input type="submit" value="Save" />
             <a href="{% url 'home' %}" class="base"> Cancel </a>
         </div>

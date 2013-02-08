@@ -5,6 +5,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import AuthenticationForm
 from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
+from django.contrib.auth.decorators import login_required
 
 from yaproject.vcard.models import VCard, RequestStore
 from yaproject.vcard.forms import MemberAccountForm, VCardForm
@@ -22,6 +23,7 @@ def requests_store(request):
         {'requests': requests}, RequestContext(request))
 
 
+@login_required(login_url='/login/')
 def edit_page(request):
     instance = VCard.objects.get(pk=1)
     form = VCardForm(instance=instance)
@@ -62,17 +64,20 @@ def accounts_registration(request):
 
 
 def login_account(request):
-    form = AuthenticationForm(request=request)
+    form = AuthenticationForm()
 
     if request.POST:
         form = AuthenticationForm(request=request, data=request.POST)
 
         if form.is_valid():
-            user = form.get_user()
+            username = request.POST['username']
+            password = request.POST['password']
+            user = authenticate(username=username, password=password)
 
             if user is not None:
-                login(request, user)
-                return redirect('home')
+                if user.is_active:
+                    login(request, user)
+                    return redirect('home')
 
     request.session.set_test_cookie()
 
