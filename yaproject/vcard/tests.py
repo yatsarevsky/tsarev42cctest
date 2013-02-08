@@ -41,10 +41,15 @@ class VcardViewsTest(unittest.TestCase):
 
 class RequestStoreTest(unittest.TestCase):
     def test_middleware_with_store(self):
-        client = Client()
-        self.resp = client.get('/request_store/')
+        self.client = Client()
+        self.resp = self.client.get('/request_store/')
         self.assertEqual(self.resp.status_code, 200)
-        self.req_store = RequestStore.objects.latest('date')
+        while RequestStore.objects.all().count() != 12:
+                self.resp = self.client.get('/')
+        self.resp = self.client.get('/request_store/')
+        self.assertEqual(len(self.resp.context['requests']), 10)
+        self.req_store = RequestStore.objects.latest('id')
         self.assertTrue(self.req_store)
-        self.assertTrue(self.req_store.host)
-        self.assertTrue(self.req_store.path)
+        self.assertEqual(self.req_store.host, 'testserver')
+        self.assertEqual(self.req_store.path, '/request_store/')
+        self.assertTrue(self.req_store.date)
