@@ -52,7 +52,17 @@ class VcardViewsTest(BaseTest):
         self.assertTrue(self.vcard.bio)
         self.assertTrue(self.vcard.e_mail)
 
+    def test_views_with_login(self):
+        User.objects.create_user(**self.user_data)
+        self.resp = self.client.get('/login/')
+        self.assertEqual(self.resp.status_code, 200)
+        self.assertIsInstance(self.resp.context['form'], AuthenticationForm)
+        self.resp = self.client.post('/login/', self.user_data, follow=True)
+        self.assertIn('http://testserver/edit/',
+            dict(self.resp.redirect_chain))
+
     def test_views_with_edit_page(self):
+        self.client.login(username='admin', password='admin')
         self.resp = self.client.get('/edit/')
         self.assertEqual(self.resp.status_code, 200)
         self.assertEqual(self.resp.context['form'].instance, self.vcard)
@@ -71,14 +81,6 @@ class VcardViewsTest(BaseTest):
         self.vcard = VCard.objects.get(pk=1)
         self.assertEqual(self.vcard.name, 'test')
         self.assertEqual(self.vcard.surname, 'test')
-
-    def test_views_with_login(self):
-        User.objects.create_user(**self.user_data)
-        self.resp = self.client.get('/login/')
-        self.assertEqual(self.resp.status_code, 200)
-        self.assertIsInstance(self.resp.context['form'], AuthenticationForm)
-        self.resp = self.client.post('/login/', self.user_data, follow=True)
-        self.assertIn('http://testserver/', dict(self.resp.redirect_chain))
 
     def test_views_with_login_incorrect_data(self):
         self.user_data = {
@@ -119,11 +121,26 @@ class VcardViewsTest(BaseTest):
         self.resp = self.client.get('/')
         self.assertEqual(self.resp.context['user'].username, '')
 
+    def test_views_with_edit_incorrect_data(self):
+        self.client.login(username='admin', password='admin')
+        self.resp = self.client.get('/edit/')
+        self.assertEqual(self.resp.status_code, 200)
+        self.assertEqual(self.resp.context['form'].instance, self.vcard)
+        self.resp = self.client.post('/edit/', {'name': ''}, follow=True)
+        self.assertEqual(self.resp.context['form'].errors['name'][0],
+            'This field is required.')
+        self.resp = self.client.post('/edit/',
+            {'name': 'test', 'birth_date': '1980'}, follow=True)
+        self.assertEqual(self.resp.context['form'].errors['birth_date'][0],
+            'Enter a valid date.')
 
-class RequestStoreTest(unittest.TestCase):
+    def  test_views_with_edit_data_not_all(self):
+        pass
+
+
+class RequestStoreTest(BaseTest):
     def test_middleware_with_store(self):
-        client = Client()
-        self.resp = client.get('/request_store/')
+        self.resp = self.client.get('/request_store/')
         self.assertEqual(self.resp.status_code, 200)
         self.req_store = RequestStore.objects.latest('date')
         self.assertTrue(self.req_store)
