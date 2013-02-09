@@ -25,6 +25,16 @@ class MemberAccountForm(ModelForm):
 
         return data
 
+    def save(self, commit=True):
+        user = super(MemberAccountForm, self).save(commit=False)
+        password = self.cleaned_data['password']
+        user.is_active = True
+        user.set_password(password)
+        user.is_authenticated()
+        if commit:
+            user.save()
+        return user
+
 
 class VCardForm(ModelForm):
     class Meta:

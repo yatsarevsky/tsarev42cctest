@@ -15,8 +15,6 @@ strong {
 .center {
     width: 960px;
     height: 530px;
-    border: 1px solid rgb(100, 100, 100);
-    border-width: 0px 0px 2px;
     }
 
 .up {
@@ -64,8 +62,9 @@ img{
 
 .c_down {
     float: left;
-    margin-top: 60px;
-    width: 600px;
+    margin-top: 10px;
+    width: 960px;
+    padding-bottom: 10px;
     }
 
 #name {
@@ -74,4 +73,21 @@ img{
 
 #surname {
     margin-right: 23px;
+    }
+
+#requests {
+    float: left;
+    width: 470px;
+    }
+
+.down {
+    margin-top: 40px;
+    width: 960px;
+    height: 25px;
+    border: 2px solid rgb(100, 100, 100);
+    border-width: 3px 0px 0px;
+    }
+
+.errorlist {
+    color: red;
     }

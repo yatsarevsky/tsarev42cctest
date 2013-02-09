@@ -30,9 +30,6 @@ class VcardModelsTest(BaseTest):
         self.assertTrue(self.vcard.bio)
         self.assertTrue(self.vcard.e_mail)
 
-    def test_vcard_with_unicode(self):
-        self.assertEqual('Yaroslav Tsarevsky', self.vcard.__unicode__())
-
 
 class AdminTest(BaseTest):
     def test_admin_with_vcard(self):
@@ -133,9 +130,6 @@ class VcardViewsTest(BaseTest):
             {'name': 'test', 'birth_date': '1980'}, follow=True)
         self.assertEqual(self.resp.context['form'].errors['birth_date'][0],
             'Enter a valid date.')
-
-    def  test_views_with_edit_data_not_all(self):
-        pass
 
 
 class RequestStoreTest(BaseTest):

@@ -1,6 +1,5 @@
 from django.shortcuts import render_to_response, redirect
 from django.template.context import RequestContext
-from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
@@ -45,16 +44,9 @@ def accounts_registration(request):
         form = MemberAccountForm(request.POST)
 
         if form.is_valid():
-            form.save(commit=False)
-            password = form.cleaned_data['password']
-            user = User.objects.create_user(email=form.cleaned_data['email'],
-                username=form.cleaned_data['username'],
-                password=password)
-            user.is_active = True
-            user.set_password(password)
-            user.is_authenticated()
-            user.save()
-            user = authenticate(username=user.username, password=password)
+            user = form.save()
+            user = authenticate(username=request.POST['username'],
+                password=request.POST['password'])
             login(request, user)
             return redirect('home')
 
