@@ -45,9 +45,15 @@ class RequestStoreTest(unittest.TestCase):
         self.resp = self.client.get('/request_store/')
         self.assertEqual(self.resp.status_code, 200)
         while RequestStore.objects.all().count() != 12:
-                self.resp = self.client.get('/')
+            self.resp = self.client.get('/')
         self.resp = self.client.get('/request_store/')
         self.assertEqual(len(self.resp.context['requests']), 10)
+        i = 0
+        while i != 10:
+            self.assertEqual(self.resp.context['requests'][i],
+                RequestStore.objects.all()[i])
+            i += 1
+            return i
         self.req_store = RequestStore.objects.latest('id')
         self.assertTrue(self.req_store)
         self.assertEqual(self.req_store.host, 'testserver')
