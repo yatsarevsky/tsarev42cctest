@@ -15,7 +15,7 @@ class VCard(models.Model):
     photo = models.ImageField(upload_to='photo', blank=True)
     skype = models.CharField(max_length=64, blank=True, verbose_name='Skype')
     mob = models.CharField(max_length=64, blank=True, verbose_name='Mob.')
-    jid = models.CharField(max_length=64, blank=True, verbose_name='JID')
+    jid = models.CharField(max_length=64, verbose_name='JID')
 
     def __unicode__(self):
         return '{0} {1}'.format(self.name, self.surname)
