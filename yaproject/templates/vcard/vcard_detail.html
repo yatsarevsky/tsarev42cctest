@@ -7,10 +7,10 @@
 </div>
 <div class="authenticate">
     {% if request.user.is_authenticated %}
-        <a href="{% url 'logout-account' %}" class="base"> Logout  </a>
+        <a href="{% url 'logout' %}" class="base"> Logout  </a>
     {% else %}
-        <a href="{% url 'accounts-registration' %}" class="base">&#160 Sign Up &#160  </a>
-        <a href="{% url 'login' %}" class="base"> Login  </a>
+        <a href="{% url 'sign-up' %}" class="base">Sign Up</a>
+        <a href="{% url 'login' %}" class="base"> Login</a>
     {% endif %}
 </div>
 <div class="container">
@@ -44,12 +44,22 @@
             <h3><strong>BIO:</strong></h3> {{ contacts.bio }}<br />
         </div>
     </div>
+<<<<<<< HEAD
     <div class="pull_left">
 >>>>>>> master
     <a href="{% url 'requests' %}" class="base"> Requests </a>
     </div>
     <div class="edit">
     <a href="{% url 'edit_page' %}">Edit</a>
+=======
+    <div class="down">
+        <div class="pull_left">
+            <a href="{% url 'requests' %}" class="base"> Requests </a>
+        </div>
+        <div class="edit">
+            <a href="{% url 'edit_page' %}">Edit</a>
+        </div>
+>>>>>>> master
     </div>
 </div>
 {% endblock %}

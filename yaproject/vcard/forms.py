@@ -10,6 +10,8 @@ class MemberAccountForm(ModelForm):
         label=('Email address'))
     password = forms.CharField(widget=forms.PasswordInput,
         label='Your Password')
+    r_password = forms.CharField(widget=forms.PasswordInput,
+        label='Repeat Password')
 
     class Meta:
         model = User
@@ -24,6 +26,25 @@ class MemberAccountForm(ModelForm):
             raise forms.ValidationError("change email")
 
         return data
+
+    def clean_r_password(self):
+        data = self.cleaned_data['r_password']
+
+        if self.cleaned_data['password'] != self.cleaned_data['r_password']:
+            raise forms.ValidationError("repeat corect password")
+
+        return data
+
+    def save(self, commit=True):
+        user = super(MemberAccountForm, self).save(commit=False)
+        password = self.cleaned_data['password']
+        user.is_active = True
+        user.set_password(password)
+
+        if commit:
+            user.save()
+
+        return user
 
 
 class VCardForm(ModelForm):
