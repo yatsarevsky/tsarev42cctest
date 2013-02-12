@@ -19,8 +19,6 @@ def requests_store(request):
     requests = RequestStore.objects.all().order_by('id')[:10]
     return render_to_response('requests.html',
         {'requests': requests}, RequestContext(request))
-<<<<<<< HEAD
-=======
 
 
 @login_required(login_url='/login/')
@@ -59,4 +57,3 @@ def accounts_registration(request):
 def logout_account(request):
     logout(request)
     return HttpResponseRedirect(reverse("home"))
->>>>>>> master

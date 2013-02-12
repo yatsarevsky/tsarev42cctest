@@ -8,28 +8,18 @@ strong {
 
 .container {
     width: 960px;
-<<<<<<< HEAD
-    height: 500px;
-=======
     height: 530px;
->>>>>>> master
     clear: both;
     }
 
 .center {
     width: 960px;
-<<<<<<< HEAD
-    height: 400px;
-    border: 1px solid rgb(100, 100, 100);
-    border-width: 0px 0px 2px;
-=======
     height: 530px;
     }
 
 .up {
     float: left;
     width: 600px;
->>>>>>> master
     }
 
 img{
@@ -44,10 +34,6 @@ img{
 
 .center .pull_left{
     margin-top: 41px;
-<<<<<<< HEAD
-    width: 470px;
-=======
->>>>>>> master
     }
 
 .pull_right {

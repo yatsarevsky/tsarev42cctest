@@ -1,44 +1,23 @@
-<<<<<<< HEAD
-<<<<<<< HEAD
 from django.test import TestCase
-=======
-from django.utils import unittest
-from django.test import Client
-=======
-from django.test import TestCase
->>>>>>> master
 from django.template import RequestContext
 from django.test.client import RequestFactory
 from django.conf import settings as django_settings
 from django.contrib.auth.models import User
 from yaproject.vcard.context_processor import add_settings
 from django.contrib.auth.forms import AuthenticationForm
-<<<<<<< HEAD
->>>>>>> master
-=======
 from django.core.urlresolvers import reverse
->>>>>>> master
 
 from yaproject.vcard.models import VCard, RequestStore
 from yaproject.vcard.forms import MemberAccountForm
 
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-class VcardModelsTest(TestCase):
-    def test_vcard_with_data(self):
-=======
-class BaseTest(unittest.TestCase):
-=======
 class BaseTest(TestCase):
->>>>>>> master
     def setUp(self):
         self.user_data = {
             'username': 'test',
             'email': 'test@test.com',
             'password': '1',
         }
->>>>>>> master
         self.vcard = VCard.objects.get(pk=1)
 
 
@@ -50,25 +29,6 @@ class VcardModelsTest(BaseTest):
         self.assertTrue(self.vcard.bio)
         self.assertTrue(self.vcard.e_mail)
 
-<<<<<<< HEAD
-    def test_vcard_with_unicode(self):
-<<<<<<< HEAD
-        self.vcard = VCard.objects.get(pk=1)
-        self.assertEqual('Yaroslav Tsarevsky', self.vcard.__unicode__())
-
-
-class AdminTest(TestCase):
-    def test_admin_with_vcard(self):
-        self.resp = self.client.get('/admin/')
-        self.assertEqual(self.resp.status_code, 200)
-
-
-class VcardViewsTest(TestCase):
-=======
-        self.assertEqual('Yaroslav Tsarevsky', self.vcard.__unicode__())
-
-=======
->>>>>>> master
 
 class AdminTest(BaseTest):
     def test_admin_with_vcard(self):
@@ -78,7 +38,6 @@ class AdminTest(BaseTest):
 
 
 class VcardViewsTest(BaseTest):
->>>>>>> master
     def test_views_with_contacts(self):
         self.resp = self.client.get('/')
         self.assertEqual(self.resp.status_code, 200)
@@ -89,8 +48,6 @@ class VcardViewsTest(BaseTest):
         self.assertTrue(self.vcard.birth_date)
         self.assertTrue(self.vcard.bio)
         self.assertTrue(self.vcard.e_mail)
-<<<<<<< HEAD
-=======
 
     def test_views_with_login(self):
         User.objects.create_user(**self.user_data)
@@ -100,7 +57,6 @@ class VcardViewsTest(BaseTest):
         self.resp = self.client.post('/login/', self.user_data, follow=True)
         self.assertIn('http://testserver/edit/',
             dict(self.resp.redirect_chain))
->>>>>>> master
 
     def test_views_with_edit_page(self):
         self.client.login(username='admin', password='admin')
@@ -167,12 +123,6 @@ class VcardViewsTest(BaseTest):
         self.resp = self.client.get('/')
         self.assertEqual(self.resp.context['user'].username, '')
 
-<<<<<<< HEAD
-class RequestStoreTest(TestCase):
-    def test_middleware_with_store(self):
-        while RequestStore.objects.all().count() != 10:
-            self.resp = self.client.get('/')
-=======
     def test_views_with_edit_incorrect_data(self):
         self.client.login(username='admin', password='admin')
         self.resp = self.client.get('/edit/')
@@ -189,31 +139,17 @@ class RequestStoreTest(TestCase):
 
 class RequestStoreTest(TestCase):
     def test_middleware_with_store(self):
-<<<<<<< HEAD
->>>>>>> master
-=======
         while RequestStore.objects.all().count() != 10:
             self.resp = self.client.get('/')
->>>>>>> master
         self.resp = self.client.get('/request_store/')
         self.assertEqual(self.resp.status_code, 200)
         self.assertEqual(len(self.resp.context['requests']), 10)
         self.req_store = RequestStore.objects.latest('id')
         self.assertNotIn(self.req_store, self.resp.context['requests'])
         self.assertTrue(self.req_store)
-<<<<<<< HEAD
-<<<<<<< HEAD
         self.assertEqual(self.req_store.host, 'testserver')
         self.assertEqual(self.req_store.path, '/request_store/')
         self.assertTrue(self.req_store.date)
-=======
-        self.assertTrue(self.req_store.host)
-        self.assertTrue(self.req_store.path)
-=======
-        self.assertEqual(self.req_store.host, 'testserver')
-        self.assertEqual(self.req_store.path, '/request_store/')
-        self.assertTrue(self.req_store.date)
->>>>>>> master
 
 
 class ContextProcessorTest(TestCase):
@@ -223,4 +159,3 @@ class ContextProcessorTest(TestCase):
         c = RequestContext(request, {'foo': 'bar'}, [add_settings])
         self.assertTrue('settings' in c)
         self.assertEquals(c['settings'], django_settings)
->>>>>>> master
