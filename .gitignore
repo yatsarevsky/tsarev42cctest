@@ -1,6 +1,6 @@
 *.py[co]
 .project
 .pydevproject
-.db
+*.db
 .idea
 local_settings.py

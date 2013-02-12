@@ -7,40 +7,85 @@ strong {
     }
 
 .container {
-    position: relative;
     width: 960px;
+<<<<<<< HEAD
     height: 500px;
+=======
+    height: 530px;
+>>>>>>> master
     clear: both;
     }
 
 .center {
-    position: relative;
     width: 960px;
+<<<<<<< HEAD
     height: 400px;
+    border: 1px solid rgb(100, 100, 100);
+    border-width: 0px 0px 2px;
+=======
+    height: 530px;
     border: 1px solid rgb(100, 100, 100);
     border-width: 0px 0px 2px;
     }
 
-.center img {
-    position: absolute;
-    left: 0;
-    height: 260px;
-    width: 180px;
+.up {
+    float: left;
+    width: 600px;
+>>>>>>> master
+    }
+
+img{
+    width: 220px;
+    height: 310px;
     }
 
 .pull_left {
-    position: relative;
     float: left;
-    margin-top: 41px;
     width: 470px;
     }
 
+.center .pull_left{
+    margin-top: 41px;
+<<<<<<< HEAD
+    width: 470px;
+=======
+>>>>>>> master
+    }
+
 .pull_right {
-    position: relative;
     float: right;
     width: 470px;
     }
 
-.bio {
-    position: relative;
+.pull_right h3 {
+    margin-top: 18px;
+    }
+
+.edit {
+    float: right;
+    width: 470px;
+    text-align: right;
+    }
+
+.authenticate {
+    text-align: right;
+    float: right;
+    width: 300px;
+    height: 23px;
+    margin-top: 27px;
+    margin-right: 45px;
+    }
+
+.c_down {
+    float: left;
+    margin-top: 60px;
+    width: 600px;
+    }
+
+#name {
+    margin-right: 57px;
+    }
+
+#surname {
+    margin-right: 23px;
     }

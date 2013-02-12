@@ -2,17 +2,34 @@
 {% load url from future %}
 
 {% block content %}
-<h1>42 Coffee Cups Test Assignment</h1>
+<div class="up">
+    <h1>42 Coffee Cups Test Assignment</h1>
+</div>
+<div class="authenticate">
+    {% if request.user.is_authenticated %}
+        <a href="{% url 'logout-account' %}" class="base"> Logout  </a>
+    {% else %}
+        <a href="{% url 'accounts-registration' %}" class="base">&#160 Sign Up &#160  </a>
+        <a href="{% url 'login' %}" class="base"> Login  </a>
+    {% endif %}
+</div>
 <div class="container">
     <div class="center">
         <div class="pull_left">
             <strong>Name:</strong> {{ contacts.name }}<br />
             <strong>Last name:</strong> {{ contacts.surname }}<br />
             <strong>Date of birth:</strong> {{ contacts.birth_date }}<br />
+<<<<<<< HEAD
             <h3><strong>BIO:</strong></h3> {{ contacts.bio }}<br />
+=======
+            {% if contacts.photo %}
+            <h3><strong>Photo:</strong><br />
+            <img src="{{ contacts.photo.url }}" alt="">
+            {% endif %}
+>>>>>>> master
         </div>
         <div class="pull_right">
-            <h3 style="margin-top: 0px;">Contacts:</h3>
+            <h3>Contacts:</h3>
             <strong>E-mail:</strong> {{ contacts.e_mail }}<br />
             <strong>Jabber:</strong> {{ contacts.jid }}<br />
             <strong>Skype:</strong> {{ contacts.skype }}<br />
@@ -20,8 +37,19 @@
             <h3><strong>Other contacts:</strong></h3>
             <strong>Mob:</strong> {{ contacts.mob }}<br />
             {%endif%}
+<<<<<<< HEAD
         </div>
     </div>
+=======
+            <h3><strong>BIO:</strong></h3> {{ contacts.bio }}<br />
+        </div>
+    </div>
+    <div class="pull_left">
+>>>>>>> master
     <a href="{% url 'requests' %}" class="base"> Requests </a>
+    </div>
+    <div class="edit">
+    <a href="{% url 'edit_page' %}">Edit</a>
+    </div>
 </div>
 {% endblock %}
