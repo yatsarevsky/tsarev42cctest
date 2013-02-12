@@ -1,10 +1,9 @@
-from django.utils import unittest
-from django.test import Client
+from django.test import TestCase
 
 from yaproject.vcard.models import VCard, RequestStore
 
 
-class VcardModelsTest(unittest.TestCase):
+class VcardModelsTest(TestCase):
     def test_vcard_with_data(self):
         self.vcard = VCard.objects.get(pk=1)
         self.assertTrue(self.vcard.name)
@@ -18,17 +17,15 @@ class VcardModelsTest(unittest.TestCase):
         self.assertEqual('Yaroslav Tsarevsky', self.vcard.__unicode__())
 
 
-class AdminTest(unittest.TestCase):
+class AdminTest(TestCase):
     def test_admin_with_vcard(self):
-        client = Client()
-        self.resp = client.get('/admin/vcard/vcard/')
+        self.resp = self.client.get('/admin/')
         self.assertEqual(self.resp.status_code, 200)
 
 
-class VcardViewsTest(unittest.TestCase):
+class VcardViewsTest(TestCase):
     def test_views_with_contacts(self):
-        client = Client()
-        self.resp = client.get('/')
+        self.resp = self.client.get('/')
         self.assertEqual(self.resp.status_code, 200)
         self.assertTrue(self.resp.context['contacts'])
         self.vcard = self.resp.context['contacts']
@@ -39,22 +36,15 @@ class VcardViewsTest(unittest.TestCase):
         self.assertTrue(self.vcard.e_mail)
 
 
-class RequestStoreTest(unittest.TestCase):
+class RequestStoreTest(TestCase):
     def test_middleware_with_store(self):
-        self.client = Client()
-        self.resp = self.client.get('/request_store/')
-        self.assertEqual(self.resp.status_code, 200)
-        while RequestStore.objects.all().count() != 12:
+        while RequestStore.objects.all().count() != 10:
             self.resp = self.client.get('/')
         self.resp = self.client.get('/request_store/')
+        self.assertEqual(self.resp.status_code, 200)
         self.assertEqual(len(self.resp.context['requests']), 10)
-        i = 0
-        while i != 10:
-            self.assertEqual(self.resp.context['requests'][i],
-                RequestStore.objects.all()[i])
-            i += 1
-            return i
         self.req_store = RequestStore.objects.latest('id')
+        self.assertNotIn(self.req_store, self.resp.context['requests'])
         self.assertTrue(self.req_store)
         self.assertEqual(self.req_store.host, 'testserver')
         self.assertEqual(self.req_store.path, '/request_store/')
