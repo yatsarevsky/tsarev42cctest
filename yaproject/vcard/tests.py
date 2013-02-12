@@ -1,23 +1,22 @@
-from django.utils import unittest
-from django.test import Client
+from django.test import TestCase
 from django.template import RequestContext
 from django.test.client import RequestFactory
 from django.conf import settings as django_settings
 from django.contrib.auth.models import User
 from yaproject.vcard.context_processor import add_settings
 from django.contrib.auth.forms import AuthenticationForm
+from django.core.urlresolvers import reverse
 
 from yaproject.vcard.models import VCard, RequestStore
 from yaproject.vcard.forms import MemberAccountForm
 
 
-class BaseTest(unittest.TestCase):
+class BaseTest(TestCase):
     def setUp(self):
-        self.client = Client()
         self.user_data = {
             'username': 'test',
             'email': 'test@test.com',
-            'password': '1'
+            'password': '1',
         }
         self.vcard = VCard.objects.get(pk=1)
 
@@ -33,13 +32,15 @@ class VcardModelsTest(BaseTest):
 
 class AdminTest(BaseTest):
     def test_admin_with_vcard(self):
-        self.resp = self.client.get('/admin/vcard/vcard/')
+        link = reverse('admin:vcard_vcard_change', args=[self.vcard.pk])
+        self.resp = self.client.get(link)
         self.assertEqual(self.resp.status_code, 200)
 
 
 class VcardViewsTest(BaseTest):
     def test_views_with_contacts(self):
-        self.resp = self.client.get('/')
+        link = reverse('home')
+        self.resp = self.client.get(link)
         self.assertEqual(self.resp.status_code, 200)
         self.assertTrue(self.resp.context['contacts'])
         self.vcard = self.resp.context['contacts']
@@ -50,17 +51,20 @@ class VcardViewsTest(BaseTest):
         self.assertTrue(self.vcard.e_mail)
 
     def test_views_with_login(self):
+        link = reverse('login')
         User.objects.create_user(**self.user_data)
-        self.resp = self.client.get('/login/')
+        self.resp = self.client.get(link)
         self.assertEqual(self.resp.status_code, 200)
         self.assertIsInstance(self.resp.context['form'], AuthenticationForm)
-        self.resp = self.client.post('/login/', self.user_data, follow=True)
+        link = reverse('login')
+        self.resp = self.client.post(link, self.user_data, follow=True)
         self.assertIn('http://testserver/edit/',
             dict(self.resp.redirect_chain))
 
     def test_views_with_edit_page(self):
+        link = reverse('edit_page')
         self.client.login(username='admin', password='admin')
-        self.resp = self.client.get('/edit/')
+        self.resp = self.client.get(link)
         self.assertEqual(self.resp.status_code, 200)
         self.assertEqual(self.resp.context['form'].instance, self.vcard)
         self.data = {
@@ -73,79 +77,101 @@ class VcardViewsTest(BaseTest):
             'mob': '1111111',
             'jid': 'test'
         }
-        self.resp = self.client.post('/edit/', self.data, follow=True)
-        self.assertIn('http://testserver/', dict(self.resp.redirect_chain))
+        self.resp = self.client.post(link, self.data, follow=True)
+        self.assertEqual(self.resp.status_code, 200)
+        import json
+        self.json = json.dumps({'resource': self.data})
+        self.resp = self.client.post(reverse('edit_page'),
+            self.data, HTTP_X_REQUESTED_WITH='XMLHttpRequest')
+        self.assertEqual(self.resp.content, '{"ok": true}')
         self.vcard = VCard.objects.get(pk=1)
         self.assertEqual(self.vcard.name, 'test')
         self.assertEqual(self.vcard.surname, 'test')
 
     def test_views_with_login_incorrect_data(self):
-        self.user_data = {
-            'username': 'test1',
-            'email': 'test@test.com',
-            'password': '1'
-        }
+        link = reverse('login')
         User.objects.create_user(**self.user_data)
         self.user_data['password'] = '2'
-        self.resp = self.client.post('/login/', self.user_data)
+        self.resp = self.client.post(link, self.user_data)
         self.assertEqual(len(self.resp.context['form'].errors), 1)
 
     def test_views_with_registration_form_clean_email(self):
+        link = reverse('sign-up')
         self.user_data = {
             'username': 'test3',
-            'email': 'test@test.com',
-            'password': '1'
+            'email': 'a@a.ru',
+            'password': '1',
+            'r_password': '1'
         }
-        self.resp = self.client.get('/sign-up/member/')
+        self.resp = self.client.get(link)
         self.assertEqual(self.resp.status_code, 200)
         self.assertIsInstance(self.resp.context['form'], MemberAccountForm)
-        self.resp = self.client.post('/sign-up/member/', self.user_data)
-        self.assertEqual(len(self.resp.context['form'].errors), 1)
-        self.user_data = {
-            'username': 'test4',
-            'email': 'test4@test.com',
-            'password': '1'
-        }
-        self.resp = self.client.post('/sign-up/member/',
+        self.resp = self.client.post(link, self.user_data)
+        self.assertEqual(self.resp.context['form'].errors['email'],
+            ['change email'])
+        self.user_data['email'] = 'b@b.ru'
+        self.resp = self.client.post(link,
             self.user_data, follow=True)
         self.assertIn('http://testserver/', dict(self.resp.redirect_chain))
 
+    def test_views_with_registration_form_clean_r_password(self):
+        link = reverse('sign-up')
+        self.user_data = {
+            'username': 'test4',
+            'email': 'test4@test.com',
+            'password': '1',
+            'r_password': '2'
+        }
+        self.resp = self.client.post(link,
+            self.user_data)
+        self.assertEqual(self.resp.context['form'].errors['r_password'],
+            ['repeat corect password'])
+
     def test_views_with_logout(self):
-        self.client.login(username='test', password='1')
-        self.resp = self.client.get('/')
-        self.assertEqual(self.resp.context['user'].username, 'test')
-        self.resp = self.client.get('/logout/', follow=True)
-        self.resp = self.client.get('/')
+        link = reverse('home')
+        self.client.login(username='admin', password='admin')
+        self.resp = self.client.get(link)
+        self.assertEqual(self.resp.context['user'].username, 'admin')
+        link = reverse('logout')
+        self.resp = self.client.get(link, follow=True)
         self.assertEqual(self.resp.context['user'].username, '')
 
     def test_views_with_edit_incorrect_data(self):
+        link = reverse('edit_page')
         self.client.login(username='admin', password='admin')
-        self.resp = self.client.get('/edit/')
+        self.resp = self.client.get(link)
         self.assertEqual(self.resp.status_code, 200)
         self.assertEqual(self.resp.context['form'].instance, self.vcard)
-        self.resp = self.client.post('/edit/', {'name': ''}, follow=True)
+        self.resp = self.client.post(link, {'name': ''}, follow=True)
         self.assertEqual(self.resp.context['form'].errors['name'][0],
             'This field is required.')
-        self.resp = self.client.post('/edit/',
+        self.resp = self.client.post(link,
             {'name': 'test', 'birth_date': '1980'}, follow=True)
         self.assertEqual(self.resp.context['form'].errors['birth_date'][0],
             'Enter a valid date.')
 
 
-class RequestStoreTest(BaseTest):
+class RequestStoreTest(TestCase):
     def test_middleware_with_store(self):
+        link = reverse('home')
+        while RequestStore.objects.all().count() != 10:
+            self.resp = self.client.get(link)
         self.resp = self.client.get('/request_store/')
         self.assertEqual(self.resp.status_code, 200)
-        self.req_store = RequestStore.objects.latest('date')
+        self.assertEqual(len(self.resp.context['requests']), 10)
+        self.req_store = RequestStore.objects.latest('id')
+        self.assertNotIn(self.req_store, self.resp.context['requests'])
         self.assertTrue(self.req_store)
-        self.assertTrue(self.req_store.host)
-        self.assertTrue(self.req_store.path)
+        self.assertEqual(self.req_store.host, 'testserver')
+        self.assertEqual(self.req_store.path, '/request_store/')
+        self.assertTrue(self.req_store.date)
 
 
-class ContextProcessorTest(unittest.TestCase):
+class ContextProcessorTest(TestCase):
     def test_context_processor_with_settings(self):
+        link = reverse('home')
         factory = RequestFactory()
-        request = factory.get('/')
+        request = factory.get(link)
         c = RequestContext(request, {'foo': 'bar'}, [add_settings])
         self.assertTrue('settings' in c)
         self.assertEquals(c['settings'], django_settings)

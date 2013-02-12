@@ -1,4 +1,4 @@
-from django.shortcuts import render_to_response, redirect
+from django.shortcuts import render_to_response, redirect, HttpResponse
 from django.template.context import RequestContext
 from django.contrib.auth import authenticate, login, logout
 from django.http import HttpResponseRedirect
@@ -7,6 +7,8 @@ from django.contrib.auth.decorators import login_required
 
 from yaproject.vcard.models import VCard, RequestStore
 from yaproject.vcard.forms import MemberAccountForm, VCardForm
+
+import json
 
 
 def contacts(request):
@@ -31,7 +33,10 @@ def edit_page(request):
 
         if form.is_valid():
             form.save()
-            return redirect('home')
+
+            if request.is_ajax():
+                return HttpResponse(json.dumps({'ok': True}),
+                    content_type='application/json')
 
     return render_to_response('vcard/edit_vcard.html',
         {'form': form}, RequestContext(request))
