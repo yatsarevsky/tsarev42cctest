@@ -15,15 +15,13 @@ class MemberAccountForm(ModelForm):
 
     class Meta:
         model = User
-        exclude = ('first_name', 'last_name', 'groups', 'user_permissions',
-            'is_staff', 'is_active', 'is_superuser',
-            'last_login', 'date_joined')
+        fields = ['username', 'email', 'password', 'r_password']
 
     def clean_email(self):
         data = self.cleaned_data['email']
 
         if User.objects.filter(email__exact=data).exists():
-            raise forms.ValidationError("change email")
+            raise forms.ValidationError("User with this email already exists")
 
         return data
 
@@ -31,7 +29,7 @@ class MemberAccountForm(ModelForm):
         data = self.cleaned_data['r_password']
 
         if self.cleaned_data['password'] != self.cleaned_data['r_password']:
-            raise forms.ValidationError("repeat corect password")
+            raise forms.ValidationError("Passwords should match")
 
         return data
 

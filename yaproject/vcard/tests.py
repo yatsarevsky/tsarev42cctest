@@ -58,10 +58,10 @@ class VcardViewsTest(BaseTest):
         self.assertIsInstance(self.resp.context['form'], AuthenticationForm)
         link = reverse('login')
         self.resp = self.client.post(link, self.user_data, follow=True)
-        self.assertIn('http://testserver/edit/',
+        self.assertIn('http://testserver/',
             dict(self.resp.redirect_chain))
 
-    def test_views_with_edit_page(self):
+    def test_edit_page(self):
         link = reverse('edit_page')
         self.client.login(username='admin', password='admin')
         self.resp = self.client.get(link)
@@ -87,8 +87,14 @@ class VcardViewsTest(BaseTest):
         self.vcard = VCard.objects.get(pk=1)
         self.assertEqual(self.vcard.name, 'test')
         self.assertEqual(self.vcard.surname, 'test')
+        self.assertEqual(str(self.vcard.birth_date), '1980-10-10')
+        self.assertEqual(self.vcard.bio, 'test test')
+        self.assertEqual(self.vcard.e_mail, 'test@test.com')
+        self.assertEqual(self.vcard.skype, 'test')
+        self.assertEqual(self.vcard.mob, '1111111')
+        self.assertEqual(self.vcard.jid, 'test')
 
-    def test_views_with_login_incorrect_data(self):
+    def test_login_wrong_password(self):
         link = reverse('login')
         User.objects.create_user(**self.user_data)
         self.user_data['password'] = '2'
@@ -108,13 +114,12 @@ class VcardViewsTest(BaseTest):
         self.assertIsInstance(self.resp.context['form'], MemberAccountForm)
         self.resp = self.client.post(link, self.user_data)
         self.assertEqual(self.resp.context['form'].errors['email'],
-            ['change email'])
+            ['User with this email already exists'])
         self.user_data['email'] = 'b@b.ru'
-        self.resp = self.client.post(link,
-            self.user_data, follow=True)
+        self.resp = self.client.post(link, self.user_data, follow=True)
         self.assertIn('http://testserver/', dict(self.resp.redirect_chain))
 
-    def test_views_with_registration_form_clean_r_password(self):
+    def test_registration_passwords_dont_match(self):
         link = reverse('sign-up')
         self.user_data = {
             'username': 'test4',
@@ -125,7 +130,7 @@ class VcardViewsTest(BaseTest):
         self.resp = self.client.post(link,
             self.user_data)
         self.assertEqual(self.resp.context['form'].errors['r_password'],
-            ['repeat corect password'])
+            ['Passwords should match'])
 
     def test_views_with_logout(self):
         link = reverse('home')

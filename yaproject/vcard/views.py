@@ -1,8 +1,6 @@
 from django.shortcuts import render_to_response, redirect, HttpResponse
 from django.template.context import RequestContext
-from django.contrib.auth import authenticate, login, logout
-from django.http import HttpResponseRedirect
-from django.core.urlresolvers import reverse
+from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
 
 from yaproject.vcard.models import VCard, RequestStore
@@ -57,8 +55,3 @@ def accounts_registration(request):
 
     return render_to_response('accounts/signup_member.html',
         {'form': form}, RequestContext(request))
-
-
-def logout_account(request):
-    logout(request)
-    return HttpResponseRedirect(reverse("home"))
