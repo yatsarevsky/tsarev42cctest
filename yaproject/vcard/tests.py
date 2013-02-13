@@ -198,3 +198,13 @@ class ContextProcessorTest(TestCase):
         c = RequestContext(request, {'foo': 'bar'}, [add_settings])
         self.assertTrue('settings' in c)
         self.assertEquals(c['settings'], django_settings)
+
+
+class TemplateTagTest(TestCase):
+    def test_template_tag(self):
+        link = reverse('home')
+        self.client.login(username='admin', password='admin')
+        self.resp = self.client.get(link)
+        self.assertIn('<a href="/admin/vcard/vcard/1/">Edit</a>',
+            self.resp.content)
+        #TODO
