@@ -79,11 +79,6 @@ class VcardViewsTest(BaseTest):
         }
         self.resp = self.client.post(link, self.data, follow=True)
         self.assertEqual(self.resp.status_code, 200)
-        import json
-        self.json = json.dumps({'resource': self.data})
-        self.resp = self.client.post(reverse('edit_page'),
-            self.data, HTTP_X_REQUESTED_WITH='XMLHttpRequest')
-        self.assertEqual(self.resp.content, '{"ok": true}')
         self.vcard = VCard.objects.get(pk=1)
         self.assertEqual(self.vcard.name, 'test')
         self.assertEqual(self.vcard.surname, 'test')
@@ -93,6 +88,29 @@ class VcardViewsTest(BaseTest):
         self.assertEqual(self.vcard.skype, 'test')
         self.assertEqual(self.vcard.mob, '1111111')
         self.assertEqual(self.vcard.jid, 'test')
+
+    def test_form_json(self):
+        self.client.login(username='admin', password='admin')
+        self.data = {
+            'name': 'test',
+            'surname': 'test',
+            'birth_date': '1980-10-10',
+            'bio': 'test test',
+            'e_mail': 'test@test.com',
+            'skype': 'test',
+            'mob': '1111111',
+            'jid': 'test'
+        }
+        import json
+        self.json = json.dumps({'resource': self.data})
+        self.resp = self.client.post(reverse('edit_page'),
+            self.data, HTTP_X_REQUESTED_WITH='XMLHttpRequest')
+        self.assertEqual(self.resp.content, '{"ok": true}')
+        self.data['name'] = 'test2'
+        self.resp = self.client.post(reverse('edit_page'),
+            self.data, follow=True)
+        self.vcard = VCard.objects.get(pk=1)
+        self.assertEqual(self.vcard.name, 'test2')
 
     def test_login_wrong_password(self):
         link = reverse('login')
