@@ -1,20 +1,50 @@
 {% extends "base.html" %}
 {% load url from future %}
 
+{% block script %}
+<link type="text/css" href="{{ STATIC_URL }}css/start/jquery-ui-1.9.2.custom.css" rel="stylesheet" />
+<script src="{{ STATIC_URL }}js/jquery-1.8.3.js" type="text/javascript"></script>
+<script src="{{ STATIC_URL }}js/jquery-ui-1.9.2.custom.min.js" type="text/javascript"></script>
+<script src="{{ STATIC_URL }}js/jquery-ui-1.9.2.custom.js" type="text/javascript"></script>
+<script src="{{ STATIC_URL }}js/jquery.form.js" type="text/javascript"></script>
+<script type="text/javascript">
+    $(document).ready(function() {
+        $('#edit_form').submit(function() {
+            $('#progress').show();
+            var $inputs = $(this).find(':input');
+            $inputs.prop('readonly', true);
+            $(this).addClass('loading_form');
+            $(this).ajaxSubmit({
+                success: function(response) {
+                    if (response['ok']) {
+                        $('#progress').hide();
+                        $inputs.prop('readonly', false);
+                        $('#edit_form').removeClass('loading_form');
+                    } else {
+                        alert('somethig is wrong');
+                    }
+                }
+            });
+            return false;
+        });
+    })
+</script>
+{% endblock %}
+
 {% block content %}
 <div class="up" >
     <h1>42 Coffee Cups Test Assignment</h1>
 </div>
 <div class="authenticate">
     {% if request.user.is_authenticated %}
-        <a href="{% url 'logout' %}" class="base"> Logout  </a>
+        <a href="{% url 'logout' %}" class="base"> Logout </a>
     {% else %}
         <a href="{% url 'sign-up' %}" class="base">Sign Up </a>
         <a href="{% url 'login' %}" class="base"> Login</a>
     {% endif %}
 </div>
 <div class="container">
-<form action="./" method="post" enctype="multipart/form-data">
+<form action="./" method="post" enctype="multipart/form-data" id="edit_form">
     {% csrf_token %}
     <div class="center">
         <div class="pull_left">
@@ -43,10 +73,23 @@
     <div class="c_down">
         <input type="submit" value="Save" />
         <a href="{% url 'home' %}" class="base"> Cancel </a>
+        <b id="progress" class="hide">Please wait ...</b>
     </div>
     <div class="down">
         <a href="{% url 'requests' %}" class="base"> Requests </a>
     </div>
 </form>
 </div>
+<script type="text/javascript">
+    $(function(){
+        $.datepicker.setDefaults(
+            $.extend($.datepicker.regional["ru"])
+        );
+        $("#id_birth_date").datepicker({
+            changeYear: "True",
+            minDate: "-40y",
+            dateFormat: "yy-mm-dd"
+            });
+    });
+</script>
 {% endblock %}
