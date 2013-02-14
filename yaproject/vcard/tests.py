@@ -1,5 +1,6 @@
 from django.test import TestCase
-from django.template import RequestContext
+from django.template import RequestContext, Template, Context,\
+                            TemplateSyntaxError
 from django.test.client import RequestFactory
 from django.conf import settings as django_settings
 from django.contrib.auth.models import User
@@ -200,11 +201,49 @@ class ContextProcessorTest(TestCase):
         self.assertEquals(c['settings'], django_settings)
 
 
-class TemplateTagTest(TestCase):
+class TemplateTagTest(BaseTest):
     def test_template_tag(self):
         link = reverse('home')
+        pattern = 'admin:{0}_{1}_change'.format(self.vcard._meta.app_label,
+            self.vcard._meta.module_name)
         self.client.login(username='admin', password='admin')
         self.resp = self.client.get(link)
-        self.assertIn('<a href="/admin/vcard/vcard/1/">Edit</a>',
+        self.assertIn(reverse(pattern, args=[self.vcard.id]),
             self.resp.content)
-        #TODO
+
+        def test_template_tag_error(self):
+            t = Template('{% load edit_link %}{% get_edit_link my_vcard %}')
+            c = Context({"my_vcard": self.vcard})
+            self.rendered = t.render(c)
+            self.assertEqual(self.rendered,
+                '<a href="/admin/vcard/vcard/1/">Edit</a>')
+            self.assertRaisesRegexp(TemplateSyntaxError,
+                "tag requires exactly three arguments",
+                self.render_template,
+                "{% load edit_link %}{% get_edit_link my_vcard %}", {})
+
+
+class TemplateTagTest(BaseTest):
+    def render_template(self, t, c):
+        c = Context(c)
+        return Template(t).render(c)
+
+    def test_template_tag(self):
+        link = reverse('home')
+        pattern = 'admin:{0}_{1}_change'.format(self.vcard._meta.app_label,
+            self.vcard._meta.module_name)
+        self.client.login(username='admin', password='admin')
+        self.resp = self.client.get(link)
+        self.assertIn(reverse(pattern, args=[self.vcard.id]),
+            self.resp.content)
+
+    def test_template_tag_error(self):
+        t = '{% load edit_link %}{% get_edit_link my_vcard %}'
+        c = {"my_vcard": self.vcard}
+        self.assertEqual(self.render_template(t, c),
+            '<a href="/admin/vcard/vcard/1/">Edit</a>')
+        self.assertRaisesRegexp(TemplateSyntaxError,
+            "'get_edit_link' tag requires only one arguments",
+            self.render_template,
+            '{% load edit_link %}{% get_edit_link my_vcard "some" %}',
+            {})
