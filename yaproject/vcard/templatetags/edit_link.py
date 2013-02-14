@@ -11,7 +11,7 @@ class EditLinkNode(template.Node):
 
     def render(self, context):
         obj = self.target.resolve(context)
-        pattern = 'admin:{0}_{1}_change'.format(obj._meta.app_label,
+        pattern = 'admin:%s_%s_change' % (obj._meta.app_label,
             obj._meta.module_name)
         return '<a href="{}">Edit</a>'.format(reverse(pattern,
         args=[obj.pk]))
