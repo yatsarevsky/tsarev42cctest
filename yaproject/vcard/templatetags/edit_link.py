@@ -13,7 +13,7 @@ class EditLinkNode(template.Node):
         obj = self.target.resolve(context)
         pattern = 'admin:{0}_{1}_change'.format(obj._meta.app_label,
             obj._meta.module_name)
-        return '<a href="{}">Edit</a>'.format(reverse(pattern,
+        return '<a href="{}">Edit(admin)</a>'.format(reverse(pattern,
         args=[obj.pk]))
 
 
